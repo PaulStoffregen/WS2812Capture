@@ -1,7 +1,7 @@
 # Capture and Analyze Timing of WS2812 LED Data
 
 WS2812Capture is a Teensy 4.x library which can capture and analyze WS2812 LED data.
-It's primary purpose is to verify the correctness timing used by other libraries
+It's primary purpose is to verify the correctness of timing used by other libraries
 which transmit data to WS2812 addressable LEDs.
 
 ![Screenshot with timing numbers overlaid with photo of 8 LEDs and 2 Teensy boards](docs/eightleds.png)
@@ -20,11 +20,13 @@ of a 5V signal could risk hardware damage.
 
 Pins 2, 4, 5, 6, 8, 22, 23, 29 on Teensy 4.0 maybe used to capture WS2812 data.
 
+Pins 36, 49, 53, 54 are also supported on Teensy 4.1.
+
 ## Basic Functions
 
 * `WS2812Capture myleds(Pin, PixelFormat)`
 
-    Create a WS2812Capture instance which captures using a specific pin.  PixelFormat may be WS2812_RGB, WS2812_GRB, WS2812_RGBW, WS2812_GRBW, etc.
+    Create a WS2812Capture instance which captures using a specific pin.  PixelFormat may be WS2812_RGB, WS2812_GRB, WS2812_RGBW, WS2812_GRBW, etc.  In theory, multiple instances may be created to capture parallel WS2812 data, but in practice how many parallel streams Teensy 4.0 can handle remains an unanswered question...
   
 * `myleds.begin(buffer, sizeof(buffer))`
 
@@ -48,11 +50,11 @@ Pins 2, 4, 5, 6, 8, 22, 23, 29 on Teensy 4.0 maybe used to capture WS2812 data.
 
     Return the number of pixels actually received.  This function is essentially the same as numPixels(), but can indicate if extra unnecessary bits were transmitted after those needed by the last LED.
 
-* `myleds.bitHighNanoseconds()`
+* `myleds.bitHighNanoseconds(index)`
 
-    Return the logic high time for a single bit, in nanoseconds.
+    Return the logic high time for a single bit, in nanoseconds.  Bits are indexed in the order actually received, not rearranged to PixelFormat as with getPixel(index).
 
-* `myleds.bitLowNanoseconds()`
+* `myleds.bitLowNanoseconds(index)`
 
     Return the logic low time for a single bit, in nanoseconds.  The last bit of a WS2812 frame has undefined logic low time, because the low time for that last bit blends together with the logic low reset time between frames.
 

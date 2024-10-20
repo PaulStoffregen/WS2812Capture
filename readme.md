@@ -18,7 +18,7 @@ A resistor divider should be used to reduce the 5 volt signal level used by WS28
 to the 3.3V level needed.  Teensy 4.0 pins are not 5V tolerant, so direct connection
 of a 5V signal could risk hardware damage.
 
-Pins 2, 4, 5, 6, 8, 22, 23, 29 on Teensy 4.0 maybe used to capture WS2812 data.
+Pins 2, 4, 5, 6, 8, 22, 23, 29 on Teensy 4.0 or Teensy 4.1 may be used to capture WS2812 data.
 
 Pins 36, 49, 53, 54 are also supported on Teensy 4.1.
 
@@ -48,7 +48,7 @@ Pins 36, 49, 53, 54 are also supported on Teensy 4.1.
 
 * `myleds.numBits()`
 
-    Return the number of pixels actually received.  This function is essentially the same as numPixels(), but can indicate if extra unnecessary bits were transmitted after those needed by the last LED.
+    Return the number of pixels actually received.  This function is essentially the same as numPixels(), but can indicate whether extra unnecessary bits were transmitted after those needed by the last LED.
 
 * `myleds.bitHighNanoseconds(index)`
 

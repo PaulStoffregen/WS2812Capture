@@ -54,11 +54,11 @@ Pins 36, 49, 53, 54 are also supported on Teensy 4.1.
 
     Return the total number of timing errors detected within the current LED data.
 
-    The following functions allow adjusting the timing considered error.
+    The following functions allow adjusting the timing considered correct versus erroneous.
 
 * `myleds.setT0H_min(nanoseconds)` - default is 90ns
 
-    Configure the minumum pulse width for logic 0 pulse.  Shorter will counted as errors.
+    Configure the minimum pulse width for logic 0 pulse.  Shorter will counted as errors.
 
 * `myleds.setT0H_max(nanoseconds)` - default is 340ns
 
@@ -70,7 +70,7 @@ Pins 36, 49, 53, 54 are also supported on Teensy 4.1.
 
 * `myleds.setT1H_min(nanoseconds)` - default is 560ns
 
-    Configure the minumum pulse width for logic 1 pulse.  Shorter will counted as errors.
+    Configure the minimum pulse width for logic 1 pulse.  Shorter will counted as errors.
 
 * `myleds.setT1H_max(nanoseconds)` - default is 1100ns
 
@@ -78,11 +78,11 @@ Pins 36, 49, 53, 54 are also supported on Teensy 4.1.
 
 * `myleds.setTL_min(nanoseconds)` - default is 150ns
 
-    Configure the minumum low time after each pulse.  Shorter will counted as errors.
+    Configure the minimum low time after each pulse.  Shorter will counted as errors.
 
 * `myleds.setCycle_min(nanoseconds)` - default is 1100ns
 
-    Configure the minumum total cycle time per bit.  Shorter will counted as errors.
+    Configure the minimum total cycle time per bit.  Shorter will counted as errors.
 
 * `myleds.setCycle_max(nanoseconds)` - default is 2400ns
 

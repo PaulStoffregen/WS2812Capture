@@ -88,6 +88,29 @@ Pins 36, 49, 53, 54 are also supported on Teensy 4.1.
 
     Configure the maximum total cycle time per bit.  Longer will counted as errors.
 
+## Simple Timing Statistics
+
+* `myleds.getT0H_minimum()`
+* `myleds.getT0H_average()`
+* `myleds.getT0H_maximum()`
+* `myleds.getT0H_stddev()`
+
+    Return simple stats for the pulse width of all 0 data bits.
+
+* `myleds.getT1H_minimum()`
+* `myleds.getT1H_average()`
+* `myleds.getT1H_maximum()`
+* `myleds.getT1H_stddev()`
+
+    Return simple stats for the pulse width of all 1 data bits.
+
+* `myleds.getCycle_minimum()`
+* `myleds.getCycle_average()`
+* `myleds.getCycle_maximum()`
+* `myleds.getCycle_stddev()`
+
+    Return simple stats for the total cycle time of all but the last data bit.
+
 
 ## Detailed Timing Functions
 

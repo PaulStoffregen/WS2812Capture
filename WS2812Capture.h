@@ -178,6 +178,17 @@ public:
 		return (float)diff * capture_to_nanoseconds;
 	}
 	uint32_t getResetMicroseconds() { return resetMicros; }
+	uint32_t getTimingErrorCount() { return timing_error_count; }
+
+	void setResetThreshold(uint32_t n) { reset_threshold = n; };
+	void setT0H_min(float n) { t0h_min = n; }
+	void setT0H_max(float n) { t0h_max = n; }
+	void setTH_threshold(float n) { th_threshold = n; }
+	void setT1H_min(float n) { t1h_min = n; }
+	void setT1H_max(float n) { t1h_max = n; }
+	void setTL_min(float n) { tl_min = n; }
+	void setCycle_min(float n) { cycle_min = n; }
+	void setCycle_max(float n) { cycle_max = n; }
 
 	void getPixel(size_t index, uint8_t &red, uint8_t &green, uint8_t &blue) {
 		uint32_t rgb = getPixel(index);
@@ -193,7 +204,7 @@ public:
 		blue = (wrgb >> 0) & 255;
 	}
 protected:
-	uint8_t analyze(size_t bitoffset, unsigned int numbits=8);
+	uint8_t analyze(size_t bitoffset, unsigned int numbits=8, bool last=false);
 	float capture_to_nanoseconds;
 private:
 	// configuration, hopefully compiler will optimize these as known constants
@@ -218,6 +229,17 @@ private:
 	// detection of reset period
 	size_t priorbitcount; // used by available() to detect when data still arriving
 	elapsedMicros inactiveMicros; // microseconds since new data arrived
+
+	uint32_t reset_threshold;
+	float t0h_min;
+	float t0h_max;
+	float th_threshold;
+	float t1h_min;
+	float t1h_max;
+	float tl_min;
+	float cycle_min;
+	float cycle_max;
+	uint32_t timing_error_count;
 
 	// stats
 	uint32_t resetMicros; // microseconds of reset before LED data started

@@ -10,6 +10,18 @@ bool WS2812Capture::begin(void *buf, size_t bufsize)
 	inactiveMicros = 0;
 	priorbitcount = 0;
 	decodedbitcount = 0;
+	timing_error_count = 0;
+
+	// default timing parameters
+	reset_threshold = 12;
+	t0h_min = 150;  // min width for logic 0 pulse
+	t0h_max = 340;  // max width for logic 0 pulse
+	th_threshold = 450; // our threshold for decoding
+	t1h_min = 560;  // min width for logic 1 pulse
+	t1h_max = 1100; // max width for logic 1 pulse
+	tl_min = 150;   // min time low after pulse
+	cycle_min = 1100; // min total cycle for each bit
+	cycle_max = 2400; // max total cycle for each bit
 
 	// configure FlexPWM timer
 	flexpwm->MCTRL |= FLEXPWM_MCTRL_CLDOK(1<<submodule);
@@ -56,14 +68,24 @@ bool WS2812Capture::begin(void *buf, size_t bufsize)
 	return true;
 }
 
-uint8_t WS2812Capture::analyze(size_t bitoffset, unsigned int numbits /*up to 8 bits*/)
+uint8_t WS2812Capture::analyze(size_t bitoffset, unsigned int numbits /*up to 8 bits*/, bool last)
 {
 	uint8_t data=0;
 	for (uint8_t mask=0x80; mask; mask = mask >> 1) {
 		if (numbits == 0) break;
 		float th = bitHighNanoseconds(bitoffset);
 		float tl = bitLowNanoseconds(bitoffset);
-		if (th > 450) data |= mask; // TODO: configurable threashold
+		if (th < th_threshold) {
+			if (th < t0h_min || th > t0h_max) timing_error_count++;
+		} else {
+			data |= mask;
+			if (th < t1h_min || th > t1h_max) timing_error_count++;
+		}
+		if (!last || numbits > 1) {
+			if (tl < tl_min) timing_error_count++;
+			float cycle = th + tl;
+			if (cycle < cycle_min || cycle > cycle_max) timing_error_count++;
+		}
 		// TODO: compute stats... min, max, avd, stddev
 		bitoffset++;
 		numbits--;
@@ -81,6 +103,7 @@ size_t WS2812Capture::available()
 		if (priorbitcount == 0) {
 			resetMicros = inactiveMicros;
 			decodedbitcount = 0;
+			timing_error_count = 0;
 		}
 		// analyze any full bytes received so far
 		uint8_t *databuf = (uint8_t *)((uint32_t)buffer + maxbytes * 16);
@@ -94,14 +117,17 @@ size_t WS2812Capture::available()
 		return 0;
 	}
 	// if inactive after data received, assume end of LED frame
-	if (bitcount > 0 && inactiveMicros >= 12) { // TODO: configurable threshold
+	if (bitcount > 0 && inactiveMicros >= reset_threshold) {
 		// finish analyzing any data we received but didn't already analyze
 		uint8_t *databuf = (uint8_t *)((uint32_t)buffer + maxbytes * 16);
 		databuf += decodedbitcount / 8;
 		while (bitcount - decodedbitcount) {
 			size_t bits = bitcount - decodedbitcount;
-			if (bits > 8) bits = 8;
-			*databuf++ = analyze(decodedbitcount, bits);
+			if (bits > 8) {
+				*databuf++ = analyze(decodedbitcount, 8);
+			} else {
+				*databuf++ = analyze(decodedbitcount, bits, true);
+			}
 			decodedbitcount += bits;
 		}
 		// reset the DMA capture to begin watching for next LED update

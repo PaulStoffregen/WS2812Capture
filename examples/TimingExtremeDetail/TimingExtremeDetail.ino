@@ -28,9 +28,13 @@ void loop() {
 				float low_ns = my2812.bitLowNanoseconds(n * 24 + b);
 				Serial.printf(" %4.0f", low_ns);
 				if (b == 7 || b == 15) Serial.print("  ");
+				// skip printing last low time, undefined due to WS2812 reset
+				if (b == 22 && n + 1 == my2812.numPixels()) break;
 			}
 			Serial.println();
 		}
+		Serial.print(my2812.getTimingErrorCount());
+		Serial.println(" timing errors detected");
 		Serial.println();
 	}
 }

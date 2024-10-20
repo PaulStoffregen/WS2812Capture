@@ -48,7 +48,7 @@ Pins 36, 49, 53, 54 are also supported on Teensy 4.1.
 
 * `myleds.numBits()`
 
-    Return the number of pixels actually received.  This function is essentially the same as numPixels(), but can indicate whether extra unnecessary bits were transmitted after those needed by the last LED.
+    Return the number of data bits actually received.  This function is essentially the same as numPixels() multiplied by 24 or 32, but it can indicate whether extra unnecessary bits were transmitted after those needed by the last LED.
 
 * `myleds.bitHighNanoseconds(index)`
 

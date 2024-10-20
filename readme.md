@@ -8,9 +8,13 @@ which transmit data to WS2812 addressable LEDs.
 
 Teensy 4.x FlexPWM timers with dual input capture are used to sample the incoming data
 at 150 MHz, giving 6.7ns timing accuracy.  DMA is used to efficiently move measured timing
-to RAM, giving a no-CPU solution to capturing WS2812 waveform timing.  The CPU is used
-to detect the 50-300us reset time between LED data frames, and to decode raw timing data
-into pixels.
+to RAM, giving a CPU-free solution to capturing WS2812 waveform timing.
+
+Teensy's 600 MHz CPU is used to detect the 50-300us reset time between LED data frames,
+to check timing for a variety of errors, to compute simple timing statistics, and of
+course to decode raw timing data into pixels.
+
+![Screenshot with timing stats and 0 errors detected message circled](docs/timingstats.png)
 
 ## Hardware
 
@@ -97,6 +101,8 @@ Pins 36, 49, 53, 54 are also supported on Teensy 4.1.
 
     Return simple stats for the pulse width of all 0 data bits.
 
+    Because capture uses 150 MHz sampling, or 6.7ns resolution, these stats can be expected to self-vary by 6.7ns and stddev will typically be up to 3.4ns even when the original waveform has no timing variation.
+
 * `myleds.getT1H_minimum()`
 * `myleds.getT1H_average()`
 * `myleds.getT1H_maximum()`
@@ -109,7 +115,7 @@ Pins 36, 49, 53, 54 are also supported on Teensy 4.1.
 * `myleds.getCycle_maximum()`
 * `myleds.getCycle_stddev()`
 
-    Return simple stats for the total cycle time of all but the last data bit.
+    Return simple stats for the total cycle time of all but the last data bit, because the last bit low time blends with the reset low time after the LED data frame.
 
 
 ## Detailed Timing Functions

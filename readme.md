@@ -44,6 +44,51 @@ Pins 36, 49, 53, 54 are also supported on Teensy 4.1.
 
     Return the RGB or RGBW data for a single pixel.  Data is always given in RGB or WRGB (white in upper 24 bits) format.
 
+## Timing Settings and Error Detection
+
+* `myleds.setResetThreshold(microseconds)` - default is 12us
+
+    Configure the minimum reset time available() uses to detect the end of LED data.
+
+* `myleds.getTimingErrorCount()`
+
+    Return the total number of timing errors detected within the current LED data.
+
+    The following functions allow adjusting the timing considered error.
+
+* `myleds.setT0H_min(nanoseconds)` - default is 90ns
+
+    Configure the minumum pulse width for logic 0 pulse.  Shorter will counted as errors.
+
+* `myleds.setT0H_max(nanoseconds)` - default is 340ns
+
+    Configure the maximum pulse width for logic 0 pulse.  Longer will counted as errors.
+
+* `myleds.setTH_threshold(nanoseconds)` - default is 450ns
+
+    Configure the threshold for decoding pulse width as logic low versus logic high.  This setting must be between T0H_max and T1H_min for proper error detection.
+
+* `myleds.setT1H_min(nanoseconds)` - default is 560ns
+
+    Configure the minumum pulse width for logic 1 pulse.  Shorter will counted as errors.
+
+* `myleds.setT1H_max(nanoseconds)` - default is 1100ns
+
+    Configure the maximum pulse width for logic 1 pulse.  Longer will counted as errors.
+
+* `myleds.setTL_min(nanoseconds)` - default is 150ns
+
+    Configure the minumum low time after each pulse.  Shorter will counted as errors.
+
+* `myleds.setCycle_min(nanoseconds)` - default is 1100ns
+
+    Configure the minumum total cycle time per bit.  Shorter will counted as errors.
+
+* `myleds.setCycle_max(nanoseconds)` - default is 2400ns
+
+    Configure the maximum total cycle time per bit.  Longer will counted as errors.
+
+
 ## Detailed Timing Functions
 
 * `myleds.numBits()`

@@ -33,6 +33,19 @@ void loop() {
 			}
 			Serial.println();
 		}
+
+		Serial.print("    Timing T0L (pulse width for 0 bits): ");
+		Serial.printf("min=%.1fns, avg=%.1fns, max=%.1fns, stddev=%.1fns\n",
+			my2812.getT0H_minimum(), my2812.getT0H_average(),
+			my2812.getT0H_maximum(), my2812.getT0H_stddev());
+		Serial.print("    Timing T1L (pulse width for 1 bits): ");
+		Serial.printf("min=%.1fns, avg=%.1fns, max=%.1fns, stddev=%.1fns\n",
+			my2812.getT1H_minimum(), my2812.getT1H_average(),
+			my2812.getT1H_maximum(), my2812.getT1H_stddev());
+		Serial.print("    Timing Cycle (time for 1 bit):       ");
+		Serial.printf("min=%.1fns, avg=%.1fns, max=%.1fns, stddev=%.1fns\n",
+			my2812.getCycle_minimum(), my2812.getCycle_average(),
+			my2812.getCycle_maximum(), my2812.getCycle_stddev());
 		Serial.print(my2812.getTimingErrorCount());
 		Serial.println(" timing errors detected");
 		Serial.println();

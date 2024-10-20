@@ -62,8 +62,6 @@ bool WS2812Capture::begin(void *buf, size_t bufsize)
 	if (selectinputreg) *selectinputreg = selectinputval;
 	*muxreg = muxval | 0x10;
 
-	// TODO: zero stats
-	
 	capture_to_nanoseconds = 1.0e9 / (double)F_BUS_ACTUAL;
 	return true;
 }
@@ -77,16 +75,18 @@ uint8_t WS2812Capture::analyze(size_t bitoffset, unsigned int numbits /*up to 8 
 		float tl = bitLowNanoseconds(bitoffset);
 		if (th < th_threshold) {
 			if (th < t0h_min || th > t0h_max) timing_error_count++;
+			t0h_stats.add(th);
 		} else {
 			data |= mask;
 			if (th < t1h_min || th > t1h_max) timing_error_count++;
+			t1h_stats.add(th);
 		}
 		if (!last || numbits > 1) {
 			if (tl < tl_min) timing_error_count++;
 			float cycle = th + tl;
 			if (cycle < cycle_min || cycle > cycle_max) timing_error_count++;
+			cycle_stats.add(cycle);
 		}
-		// TODO: compute stats... min, max, avd, stddev
 		bitoffset++;
 		numbits--;
 	}
@@ -104,6 +104,9 @@ size_t WS2812Capture::available()
 			resetMicros = inactiveMicros;
 			decodedbitcount = 0;
 			timing_error_count = 0;
+			t0h_stats.clear();
+			t1h_stats.clear();
+			cycle_stats.clear();
 		}
 		// analyze any full bytes received so far
 		uint8_t *databuf = (uint8_t *)((uint32_t)buffer + maxbytes * 16);

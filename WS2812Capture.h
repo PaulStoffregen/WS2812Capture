@@ -241,7 +241,59 @@ private:
 	float cycle_max;
 	uint32_t timing_error_count;
 
-	// stats
+
 	uint32_t resetMicros; // microseconds of reset before LED data started
+
+	// stats
+	struct stats {
+		float sum;
+		float sq_sum;
+		float min;
+		float max;
+		uint32_t count;
+		void add(float x) {
+			sum += x;
+			sq_sum += x * x;
+			if (x < min) min = x;
+			if (x > max) max = x;
+			count++;
+		}
+		void clear() {
+			sum = 0;
+			sq_sum = 0;
+			min = 1e12f;
+			max = 0;
+			count = 0;
+		}
+		float average() {
+			return sum / count;
+		}
+		float stddev() {
+			float mean = average();
+			return sqrtf((sq_sum / count) - (mean * mean));
+		}
+		float minimum() {
+			return min;
+		}
+		float maximum() {
+			return max;
+		}
+	};
+	stats t0h_stats;
+	stats t1h_stats;
+	stats cycle_stats;
+public:
+	float getT0H_minimum() { return t0h_stats.minimum(); }
+	float getT0H_average() { return t0h_stats.average(); }
+	float getT0H_maximum() { return t0h_stats.maximum(); }
+	float getT0H_stddev()  { return t0h_stats.stddev(); }
+	float getT1H_minimum() { return t1h_stats.minimum(); }
+	float getT1H_average() { return t1h_stats.average(); }
+	float getT1H_maximum() { return t1h_stats.maximum(); }
+	float getT1H_stddev()  { return t1h_stats.stddev(); }
+	float getCycle_minimum() { return cycle_stats.minimum(); }
+	float getCycle_average() { return cycle_stats.average(); }
+	float getCycle_maximum() { return cycle_stats.maximum(); }
+	float getCycle_stddev()  { return cycle_stats.stddev(); }
 };
 

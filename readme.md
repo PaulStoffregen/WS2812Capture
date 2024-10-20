@@ -1,7 +1,7 @@
 # Capture and Analyze Timing of WS2812 LED Data
 
 WS2812Capture is a Teensy 4.x library which can capture and analyze WS2812 LED data.
-It's primary purpose is to verify the correctness of timing used by other libraries
+Its primary purpose is to verify the correctness of timing used by other libraries
 which transmit data to WS2812 addressable LEDs.
 
 ![Screenshot with timing numbers overlaid with photo of 8 LEDs and 2 Teensy boards](docs/eightleds.png)
@@ -42,7 +42,7 @@ Pins 36, 49, 53, 54 are also supported on Teensy 4.1.
 
 * `myleds.getPixel(index)`
 
-    Return the RGB or RGBW data for a single pixel.  Data is always giving in RGB or WRGB (white in upper 24 bits) format.
+    Return the RGB or RGBW data for a single pixel.  Data is always given in RGB or WRGB (white in upper 24 bits) format.
 
 ## Detailed Timing Functions
 
